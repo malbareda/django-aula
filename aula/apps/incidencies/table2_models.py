@@ -45,7 +45,11 @@ class Table2_AlertesAcumulacioExpulsions(tables.Table):
                                    order_by=( 'cognoms', 'nom'),
                                    verbose_name=u"Alumne"
                                    )
-
+    majorEdat = tables.TemplateColumn(
+                                   template_code = u"""<a href="/tutoria/detallTutoriaAlumne/{{record.pk}}/incidencies/">{{ record.majorEdat }}</a>""", 
+                                   order_by="-majorEdatSort",
+                                   verbose_name=u"Major Edat?"
+                                   )
     grup = tables.TemplateColumn(
                                    template_code = u"""{{ record.grup  }}""", 
                                    order_by=( 'grup.descripcio_grup', 'cognoms', 'nom'),
@@ -61,7 +65,7 @@ class Table2_AlertesAcumulacioExpulsions(tables.Table):
     incidenciesAula = tables.TemplateColumn(
                                             template_code = u"""<a href="/tutoria/detallTutoriaAlumne/{{record.pk}}/incidencies">{{record.nIncidenciesAula}}</a>""", 
                                             order_by="-nIncidenciesAulaSort",
-                                            verbose_name=u"Inc. a l'aula"
+                                            verbose_name=u"Incid. a l'aula"
                                             )
 
     incidenciesForaAula = tables.TemplateColumn(
@@ -92,7 +96,7 @@ class Table2_AlertesAcumulacioExpulsions(tables.Table):
     
     class Meta:
         attrs = {"class": "paleblue table table-striped"}
-        sequence = ("alumne", "grup", "expulsions", "incidenciesAula", "incidenciesForaAula", "expulsionsAndIncidencies", "sancionar")
+        sequence = ("alumne", "majorEdat", "grup", "expulsions", "incidenciesAula", "incidenciesForaAula", "expulsionsAndIncidencies", "sancionar")
         fields = sequence
         order_by = ("expulsions", "incidenciesAula", "incidenciesForaAula" )
         template = 'bootable2.html'
@@ -239,13 +243,14 @@ class Table2_ExpulsionsIIncidenciesPerAlumne(tables.Table):
                                             {{ record.franja_incidencia }}
                                             {{ record.control_assistencia.impartir.horari.assignatura}} <br>
                                             {{ record.get_gestionada_pel_tutor_motiu_display }}
-                                            {% if record.gestionada_pel_tutor %}
                                             <br>
-                                            Sancionat per: {{record.professional}}{{record.professor}}
-                                            {% endif %}
+                                            Sancionat per: {{record.professional}}{{record.professor}}                                        
                                             """,
         orderable=False,
     )
+    #{% if record.gestionada_pel_tutor %}<br>
+    #Sancionat per: {{record.professional}}{{record.professor}}
+    #{% endif %}
     Motiu = tables.TemplateColumn(
         verbose_name=u" ",
         #attrs={'th': {'width': '46%'}},

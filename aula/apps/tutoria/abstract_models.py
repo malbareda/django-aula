@@ -29,7 +29,7 @@ class AbstractSeguimentTutorialPreguntes(models.Model):
     pregunta = models.CharField(max_length=250, unique=True)
     ajuda_pregunta = models.CharField(max_length=250, blank=True)
     es_pregunta_oberta = models.BooleanField()
-    possibles_respostes = models.TextField(blank=True)
+    possibles_respostes = models.TextField(blank=True, help_text=u"Sobre qui es realitza l'actuació")
     class Meta:
         abstract = True
         verbose_name = u'Pregunta seguiment tutorial'

@@ -818,7 +818,7 @@ def posaExpulsioPerAcumulacio( request, pk ):
             incidencies = incidencies_mateix_professor
 
     # -- Passem a fer l'expulsió
-    podem_fer_expulsio = te_3_incidencies_gestionades_pel_tutor or te_3_incidencies_mateix_professor
+    podem_fer_expulsio = True #te_3_incidencies_gestionades_pel_tutor or te_3_incidencies_mateix_professor
     
     if not podem_fer_expulsio:
         messages.warning(request, u"No podem fer expulsió." )
@@ -1038,6 +1038,11 @@ def alertesAcumulacioExpulsions( request ):
         
     alumnes = []
     for alumne in  Alumne.objects.filter( id__in = alumnes_ids ):
+        alumneedat = alumne.edat()
+        if alumneedat >= 18:
+            alumne.majorEdat = "SI"
+        else:
+            alumne.majorEdat = "NO"
         alumne.nExpulsions = alumnesAmbExpulsions_dict.get(alumne.id, 0 )        
         alumne.nIncidenciesAula = alumnesAmbIncidenciesAula_dict.get(alumne.id, 0 )
         alumne.nIncidenciesForaAula = alumnesAmbIncidenciesForaAula_dict.get(alumne.id, 0 )
@@ -1065,7 +1070,7 @@ def alertesAcumulacioExpulsions( request ):
                                                   order_by=str("-"+str(t.id)) 
                                                  ) ) for t in tipus_incidencia )
         attrs['Meta'] = type('Meta', (), {'attrs':{"class": "paleblue table table-striped", },
-                                          'sequence':["alumne", "grup", "expulsions", "incidenciesAula", "incidenciesForaAula",] + 
+                                          'sequence':["alumne", "majorEdat", "grup", "aa", "incidenciesAula", "incidenciesForaAula",] + 
                                                      [ str( t.id ) for t in tipus_incidencia ] + 
                                                      [ "expulsionsAndIncidencies", "sancionar"],
                                           'order_by':("expulsions", "incidenciesAula", "incidenciesForaAula" ),

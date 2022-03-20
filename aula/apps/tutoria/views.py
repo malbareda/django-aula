@@ -96,18 +96,18 @@ def incidenciesGestionadesPelTutor(request):
     incidencies_gestionades_pel_tutor = ( Incidencia
                                           .objects
                                           .filter(alumne__in=alumnes_tutoritzats)
-                                          .filter(gestionada_pel_tutor=True)
+                                          #.filter(gestionada_pel_tutor=True)
                                           .filter(tipus__es_informativa=False)
                                           .all())
     for incidencia in incidencies_gestionades_pel_tutor:
         alumne_str = unicode(incidencia.alumne)
         incidenciesAlumne = incidencia.alumne.incidencia_set.filter(
-            gestionada_pel_tutor=True,
+            #gestionada_pel_tutor=True,
             es_vigent=True,
             tipus__es_informativa=False,
         )
         calTramitarExpulsioPerAcumulacio = ( settings.CUSTOM_INCIDENCIES_PROVOQUEN_EXPULSIO and
-                                             incidenciesAlumne.count() >= 3 )
+                                             incidenciesAlumne.count() >= settings.CUSTOM_NOMBRE_INCIDENCIES_PER_A_EXPULSIO )
         exempleIncidenciaPerAcumulacio = ( incidenciesAlumne.order_by('dia_incidencia').reverse()[0]
                                            if calTramitarExpulsioPerAcumulacio
                                            else None )
@@ -2201,7 +2201,9 @@ def seguimentTutorialPreguntes(request):
     missatge =  u"""Atenció! Per mantenir un històric de respostes 
                     és important no modificar el redactat de les preguntes.
                     Un petit canvi en el redactat de la pregunta es cosidera
-                    una pregunta diferent."""
+                    una pregunta diferent.
+                    
+                    En les preguntes no obertes, les diferents opcions es separen mitjançant '|' """
         
     return render(
                 request,

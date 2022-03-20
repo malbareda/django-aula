@@ -2201,9 +2201,7 @@ def seguimentTutorialPreguntes(request):
     missatge =  u"""Atenció! Per mantenir un històric de respostes 
                     és important no modificar el redactat de les preguntes.
                     Un petit canvi en el redactat de la pregunta es cosidera
-                    una pregunta diferent.
-                    
-                    En les preguntes no obertes, les diferents opcions es separen mitjançant '|' """
+                    una pregunta diferent."""
         
     return render(
                 request,
